@@ -114,7 +114,8 @@ Supports both traditional email/password and OAuth:
 > Users –< Groups –< Expenses  
 > Groups –< Splits (Split includes `pay_to` & `get_pay_by` with nested user/amount)
 
-> ![ERD](./docs/erd.png)
+> <img width="654" height="560" alt="image" src="https://github.com/user-attachments/assets/710fdbce-4076-4068-89fd-23d6b587763c" />
+
 
 ---
 
