@@ -161,4 +161,4 @@ npm run dev
 
 ## 📄 License
 
-MIT © 2025 — Built by [Your Name]
+MIT © 2025 — Built by @vinhvrs
