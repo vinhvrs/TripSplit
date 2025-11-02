@@ -27,6 +27,50 @@ export const userService = {
     return user
   },
 
+  async googleLogin(accessToken, refreshToken, profile, done) {
+    try {
+      const email = profile.emails[0].value
+      let user = await UserModel.findOne({ email: email })
+      if (!user) {
+        user = new UserModel({
+          email: email,
+          name: profile.displayName
+        })
+        await user.save()
+      }
+      return done(null, user)
+    }
+    catch (err) {
+      return done(err, null)
+    }
+  },
+
+  async findOrCreateFacebookUser(email, profile) {
+    let user = await UserModel.findOne({ email })
+    if (!user) {
+      user = new UserModel({
+        email,
+        name: profile.displayName,
+        avatar: profile.photos?.[0]?.value || ''
+      })
+      await user.save()
+    }
+    return user
+  },
+
+  async findOrCreateGoogleUser(email, profile) {
+    let user = await UserModel.findOne({ email: email })
+    if (!user) {
+      user = new UserModel({
+        email: email,
+        name: profile.displayName,
+        password: bcrypt.hashSync(Math.random().toString(36).slice(-8), 10)
+      })
+      await user.save()
+    }
+    return user
+  },
+
   async getUserById(userId) {
     const user = await UserModel.findById(userId).select('-password')
     if (!user) {

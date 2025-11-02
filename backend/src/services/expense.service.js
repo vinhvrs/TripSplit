@@ -10,7 +10,7 @@ export const expenseService = {
   },
 
   async getExpenseById(expenseId) {
-    const expense = await ExpenseModel.findById(expenseId).populate('paid_by', '-password')
+    const expense = await ExpenseModel.findById(expenseId).populate('paid_by', 'paid_for', '-password')
     if (!expense) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Expense not found')
     }
@@ -18,7 +18,7 @@ export const expenseService = {
   },
 
   async getAllExpenses() {
-    return await ExpenseModel.find().populate('paid_by', '-password')
+    return await ExpenseModel.find().populate('paid_by', 'paid_for', '-password')
   },
 
   async updateExpense(expenseId, updateData) {

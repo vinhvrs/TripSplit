@@ -33,7 +33,11 @@ export const expenseController = {
   async updateExpense(req, res, next) {
     try {
       const expenseId = req.params.id
+      const images = req.files
       const updateData = req.body
+      if (images) {
+        updateData.images = images.map(file => file.path)
+      }
       const updatedExpense = await expenseService.updateExpense(expenseId, updateData)
       res.status(StatusCodes.OK).json(updatedExpense)
     }

@@ -7,11 +7,13 @@ Router.get('/:id', groupController.getGroupById)
 Router.get('/', groupController.getAllGroups)
 
 Router.post('/', groupController.createGroup)
-Router.post('/users/:id', groupController.addUserToGroup)
-Router.post('/expenses/:id', groupController.addExpenseToGroup)
+Router.get('/invite/:url', groupController.getGroupByInviteUrl)
+Router.put('/invite/:url', groupController.joinByInviteUrl)
+Router.put('/:id/users', groupController.addUserToGroup)
+Router.put('/:id/expenses', groupController.addExpenseToGroup)
 Router.put('/:id', groupController.updateGroup)
 
-Router.delete('/users/:id', groupController.removeUserFromGroup)
-Router.delete('/expenses/:id', groupController.removeExpenseFromGroup)
+Router.delete('/:id/users', groupController.removeUserFromGroup)
+Router.delete('/:id/expenses', groupController.removeExpenseFromGroup)
 
 export const groupRouter = Router

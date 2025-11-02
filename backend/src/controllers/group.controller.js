@@ -40,6 +40,28 @@ export const groupController = {
       next(error)
     }
   },
+
+  async getGroupByInviteUrl(req, res, next) {
+    try {
+      const url = req.params.url
+      const group = await groupService.getGroupByInviteUrl(url)
+      res.status(StatusCodes.OK).json(group)
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  async joinByInviteUrl(req, res, next) {
+    try {
+      const url = req.params.url
+      const userId = req.body.user_id
+      const updatedGroup = await groupService.joinByInviteUrl(url, userId)
+      res.status(StatusCodes.OK).json(updatedGroup)
+    } catch (error) {
+      next(error)
+    }
+  },
+
   async addUserToGroup(req, res, next) {
     try {
       const groupId = req.params.id
@@ -66,6 +88,7 @@ export const groupController = {
     try {
       const groupId = req.params.id
       const expenseIds = req.body.expense_ids
+      console.log('Expense IDs to add:', expenseIds)
       const updatedGroup = await groupService.addExpenseToGroup(groupId, expenseIds)
       res.status(StatusCodes.OK).json(updatedGroup)
     } catch (error) {

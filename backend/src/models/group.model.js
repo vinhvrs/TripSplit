@@ -1,34 +1,44 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const schemaOptions = { 
+const schemaOptions = {
   timestamps: true,
   collection: 'groups',
   toJSON: {
-    virtuals: true,
+    virtuals: true
   }
 }
 
 const GroupSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: false,
+    required: false
+  },
+  admin_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UserModel',
+    required: true
   },
   user_ids: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserModel',
-    required: true,
+    required: true
   }],
   expenses_ids: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ExpenseModel',
+    required: false
+  }],
+  url_invite: {
+    type: String,
     required: false,
-  }]
-}, schemaOptions);
+    unique: true
+  }
+}, schemaOptions)
 
-const GroupModel = mongoose.model('GroupModel', GroupSchema);
+const GroupModel = mongoose.model('GroupModel', GroupSchema)
 
-export default GroupModel;
+export default GroupModel

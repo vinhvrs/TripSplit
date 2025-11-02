@@ -1,33 +1,38 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const schemaOptions = {
   timestamps: true,
   collection: 'expenses',
   toJSON: {
-    virtuals: true,
+    virtuals: true
   }
 }
 
 const ExpenseSchema = new mongoose.Schema({
   description: {
     type: String,
-    required: true,
+    required: true
   },
   amount: {
     type: Number,
-    required: true,
+    required: true
   },
   paid_by: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserModel',
-    required: true,
+    required: true
+  }],
+  paid_for: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UserModel',
+    required: true
   }],
   images: [{
     type: String,
-    required: false,
+    required: false
   }]
-}, schemaOptions);
+}, schemaOptions)
 
-const ExpenseModel = mongoose.model('ExpenseModel', ExpenseSchema);
+const ExpenseModel = mongoose.model('ExpenseModel', ExpenseSchema)
 
-export default ExpenseModel;
+export default ExpenseModel

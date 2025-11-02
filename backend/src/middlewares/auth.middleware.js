@@ -21,3 +21,10 @@ export const verifyAdmin = (req, res, next) => {
   }
   next()
 }
+
+export const verifyUser = (req, res, next) => {
+  if (req.user.id !== req.params.id) {
+    return next(new ApiError(StatusCodes.FORBIDDEN, 'Bạn không có quyền truy cập'))
+  }
+  next()
+}

@@ -1,10 +1,14 @@
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
-
 import GroupModel from '~/models/group.model'
+import crypto from 'crypto'
 
 export const groupService = {
   async createGroup(groupData) {
+    const admin_id = groupData.admin_id || groupData.user_ids?.[0]
+    groupData.admin_id = admin_id
+    const url = crypto.randomUUID()
+    groupData.url_invite = url
     const newGroup = new GroupModel(groupData)
     if (groupData.expenses_ids === undefined) {
       newGroup.expenses_ids = []
@@ -26,13 +30,39 @@ export const groupService = {
   },
 
   async updateGroup(groupId, updateData) {
-    const group = await GroupModel.findByIdAndUpdate(
-      groupId,
-      updateData,
-      { new: true }
-    ).populate('user_ids', '-password')
+    const group = await GroupModel.findOne({
+      _id: groupId
+    }).populate('user_ids', '-password')
+    const admin_id = updateData.admin_id
+    if (admin_id && group.admin_id.toString() !== admin_id.toString()) {
+      throw new ApiError(StatusCodes.FORBIDDEN, 'Only the admin can update the group')
+    }
     if (!group) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
+    }
+
+    Object.assign(group, updateData)
+    await group.save()
+
+    return group
+  },
+
+  async getGroupByInviteUrl(url) {
+    const group = await GroupModel.findOne({ url_invite: url }).populate('user_ids', '-password')
+    if (!group) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
+    }
+    return group
+  },
+
+  async joinByInviteUrl(url, userId) {
+    const group = await GroupModel.findOne({ url_invite: url })
+    if (!group) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
+    }
+    if (!group.user_ids.some(id => id.toString() === userId.toString())) {
+      group.user_ids.push(userId)
+      await group.save()
     }
     return group
   },
@@ -71,6 +101,10 @@ export const groupService = {
     const group = await GroupModel.findById(groupId)
     if (!group) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
+    }
+    if (!group.expenses_ids) {
+      group.expenses_ids = []
+      return group
     }
     if (Array.isArray(expenseId)) {
       const idsToAdd = expenseId.filter(id =>
