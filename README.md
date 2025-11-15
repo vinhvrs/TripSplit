@@ -41,62 +41,345 @@ Supports both traditional email/password and OAuth:
 
 ---
 
-## 📦 API Endpoints
 
-### ✅ Auth APIs
+# 🧾 TripSplit API Report — Extended Version
 
-| Method | Endpoint           | Description                  |
-|--------|--------------------|------------------------------|
-| GET    | `/auth/google`     | Login with Google OAuth      |
-| GET    | `/auth/facebook`   | Login with Facebook OAuth    |
-| POST   | `/auth/register`   | Register with email/password |
-| POST   | `/auth/login`      | Login with credentials       |
-| GET    | `/auth/logout`     | Logout session               |
+This document includes **full API tables**, **sample requests**, and **expected outputs** for all major endpoints in the TripSplit backend.
 
 ---
 
-### 👤 User APIs
+# 📌 1. AUTH APIs
 
-| Method | Endpoint           | Description           |
-|--------|--------------------|-----------------------|
-| GET    | `/users/`          | Get all users         |
-| GET    | `/users/:id`       | Get user by ID        |
-| PUT    | `/users/:id`       | Update user info      |
+## 📄 API Table
 
----
-
-### 👥 Group APIs
-
-| Method | Endpoint                    | Description                      |
-|--------|-----------------------------|----------------------------------|
-| GET    | `/groups/`                  | List all groups                  |
-| POST   | `/groups/`                  | Create group                     |
-| PUT    | `/groups/:id/users`         | Add user to group                |
-| PUT    | `/groups/:id/expenses`      | Add expense to group             |
-| DELETE | `/groups/:id/users`         | Remove user from group           |
-| DELETE | `/groups/:id/expenses`      | Remove expense from group        |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/register` | Register new user |
+| POST | `/auth/login` | Login with email/password |
+| GET | `/auth/logout` | Logout user |
+| GET | `/auth/google` | Google OAuth login |
+| GET | `/auth/facebook` | Facebook OAuth login |
 
 ---
 
-### 💵 Expense APIs
+## 🧪 Sample Requests & Responses
 
-| Method | Endpoint         | Description              |
-|--------|------------------|--------------------------|
-| POST   | `/expenses/`     | Add new expense          |
-| PUT    | `/expenses/:id`  | Update expense           |
-| DELETE | `/expenses/:id`  | Delete expense           |
+### **POST /auth/register**
+**Request**
+```json
+{
+  "name": "John Doe",
+  "email": "john@gmail.com",
+  "password": "123456"
+}
+```
+
+**Response**
+```json
+{
+  "message": "User registered successfully",
+  "user": {
+    "_id": "6903aa...",
+    "name": "John Doe",
+    "email": "john@gmail.com"
+  }
+}
+```
 
 ---
 
-### 🔄 Split APIs
+### **POST /auth/login**
 
-| Method | Endpoint         | Description               |
-|--------|------------------|---------------------------|
-| POST   | `/splits/`       | Create split record       |
-| PUT    | `/splits/:id`    | Update split              |
-| DELETE | `/splits/:id`    | Remove split              |
+**Request**
+```json
+{
+  "email": "john@gmail.com",
+  "password": "123456"
+}
+```
+
+**Response**
+```json
+{
+  "message": "Login successful",
+  "user": {
+    "_id": "6903aa...",
+    "name": "John Doe",
+    "email": "john@gmail.com"
+  }
+}
+```
 
 ---
+
+# 👤 2. USER APIs
+
+## 📄 API Table
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/users/` | Get all users |
+| GET | `/users/:id` | Get user by ID |
+| PUT | `/users/:id` | Update user |
+
+---
+
+## 🧪 Sample Requests & Responses
+
+### **GET /users/**
+**Response**
+```json
+[
+  { "_id": "69038b...", "name": "vinh", "email": "trivinh147@gmail.com" },
+  { "_id": "690393...", "name": "Marcelo", "email": "marcelo@gmail.com" }
+]
+```
+
+---
+
+### **PUT /users/:id**
+
+**Request**
+```json
+{
+  "name": "New Name"
+}
+```
+
+**Response**
+```json
+{
+  "message": "User updated",
+  "user": {
+    "_id": "69038b...",
+    "name": "New Name",
+    "email": "trivinh147@gmail.com"
+  }
+}
+```
+
+---
+
+# 👥 3. GROUP APIs
+
+## 📄 API Table
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/groups/` | Get all groups |
+| POST | `/groups/` | Create group |
+| PUT | `/groups/:id/users` | Add user to group |
+| PUT | `/groups/:id/expenses` | Add expense to group |
+| DELETE | `/groups/:id/users` | Remove user |
+| DELETE | `/groups/:id/expenses` | Remove expense |
+
+---
+
+## 🧪 Sample Requests & Responses
+
+### **POST /groups/**
+**Request**
+```json
+{
+  "name": "DUDI Team Trip",
+  "description": "Team building",
+  "admin_id": "69038b29...",
+  "user_ids": ["69038b29...", "6903934d..."]
+}
+```
+
+**Response**
+```json
+{
+  "message": "Group created",
+  "group": {
+    "_id": "69177b...",
+    "name": "DUDI Team Trip",
+    "admin_id": "69038b29...",
+    "user_ids": ["69038b29...", "6903934d..."]
+  }
+}
+```
+
+---
+
+### **PUT /groups/:id/users**
+
+**Request**
+```json
+{
+  "user_id": "6903934ec3..."
+}
+```
+
+**Response**
+```json
+{
+  "message": "User added to group",
+  "group": { "...": "..." }
+}
+```
+
+---
+
+# 💸 4. EXPENSE APIs
+
+## 📄 API Table
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/expenses/` | Create expense |
+| PUT | `/expenses/:id` | Update expense |
+| DELETE | `/expenses/:id` | Delete expense |
+
+---
+
+## 🧪 Sample Requests & Responses
+
+### **POST /expenses/**
+**Request**
+```json
+{
+  "description": "Team Lunch Buffet",
+  "amount": 480000,
+  "paid_by": ["69038b29...", "6903934d..."],
+  "paid_for": ["69038b29...", "6903934d...", "6903934e..."]
+}
+```
+
+**Response**
+```json
+{
+  "message": "Expense created",
+  "expense": {
+    "_id": "691779c0...",
+    "amount": 480000
+  }
+}
+```
+
+---
+
+# 🔢 5. CALCULATION APIs
+
+## 📄 API Table
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/settlements/:groupId/balances` | Calculate all balances |
+| GET | `/settlements/:groupId/split` | Calculate split amounts |
+| POST | `/settlements/:groupId/settle-up` | Generate settlement transactions |
+
+---
+
+## 🧪 Sample Requests & Responses
+
+### **GET /settlements/:groupId/balances**
+
+**Response**
+```json
+[
+  { "user_id": "...", "name": "vinh", "balance": 208333.33 },
+  { "user_id": "...", "name": "Marcelo", "balance": -95833.33 }
+]
+```
+
+---
+
+### **GET /settlements/:groupId/split**
+
+**Response**
+```json
+[
+  {
+        "from": {
+            "id": "69039353c349550c006d1b3a",
+            "name": "Zelma_Herzog74",
+            "email": "Geraldine49@hotmail.com"
+        },
+        "to": {
+            "id": "69038b292436a15e95bca74f",
+            "name": "vinh",
+            "email": "trivinh147@gmail.com"
+        },
+        "amount": 133333.3333333333
+    },
+    {
+        "from": {
+            "id": "6903934ec349550c006d1b2b",
+            "name": "Darrell5",
+            "email": "Karelle.Blick@gmail.com"
+        },
+        "to": {
+            "id": "69038b292436a15e95bca74f",
+            "name": "vinh",
+            "email": "trivinh147@gmail.com"
+        },
+        "amount": 75000.00000000006
+    },
+]
+```
+
+---
+
+### **POST /settlements/:groupId/settle-up**
+
+**Response**
+```json
+[
+  {
+    "from": { "id": "6903934dc3...", "name": "Marcelo" },
+    "to": { "id": "69038b2924...", "name": "vinh" },
+    "amount": 95833.33
+  },
+  {
+    "from": { "id": "6903934ec3...", "name": "Darrell" },
+    "to": { "id": "69038b2924...", "name": "vinh" },
+    "amount": 132500
+  }
+]
+```
+
+---
+
+# 🔁 6. SPLIT APIs
+
+## 📄 API Table
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/splits/:groupId` | Get splits in a group |
+| POST | `/splits/:groupId/save` | Save generated settlement |
+| DELETE | `/splits/:id` | Remove a split |
+
+---
+
+## 🧪 Sample Requests & Responses
+
+### **POST /splits/:groupId/save**
+
+**Request**
+```json
+{
+  "settlements": [
+    { "from": "id1", "to": "id2", "amount": 50000 },
+    { "from": "id3", "to": "id2", "amount": 30000 }
+  ]
+}
+```
+
+**Response**
+```json
+{
+  "message": "Settlement saved",
+  "records_created": 3
+}
+```
+
+---
+
+# 📄 End of API Samples
+
 
 ## 🧪 Tech Stack
 
