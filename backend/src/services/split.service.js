@@ -9,20 +9,45 @@ export const splitService = {
     return split
   },
 
-  async getAllSplits() {
+  async getAllSplits(limit = 10, page = 1) {
     return await SplitModel.find()
-      .populate('group_id')
-      .populate('user_id', '-password')
-      .populate('pay_to.user_id', '-password')
-      .populate('get_pay_by.user_id', '-password')
+      .sort({ updatedAt: -1 })
+      .limit(limit ? parseInt(limit) : 0)
+      .skip(page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0)
+      .populate('group_id', 'name description')
+      .populate('user_id', 'name email')
+      .populate('pay_to.user_id', 'name email')
+      .populate('get_pay_by.user_id', 'name email')
+  },
+
+  async getSplitsByGroupId(groupId, limit = 10, page = 1) {
+    return await SplitModel.find({ group_id: groupId })
+      .sort({ updatedAt: -1 })
+      .limit(limit ? parseInt(limit) : 0)
+      .skip(page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0)
+      .populate('group_id', 'name description')
+      .populate('user_id', 'name email')
+      .populate('pay_to.user_id', 'name email')
+      .populate('get_pay_by.user_id', 'name email')
+  },
+
+  async getSplitsByUserId(userId, limit = 10, page = 1) {
+    return await SplitModel.find({ user_id: userId })
+      .sort({ updatedAt: -1 })
+      .limit(limit ? parseInt(limit) : 0)
+      .skip(page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0)
+      .populate('group_id', 'name description')
+      .populate('user_id', 'name email')
+      .populate('pay_to.user_id', 'name email')
+      .populate('get_pay_by.user_id', 'name email')
   },
 
   async getSplitById(id) {
     const split = await SplitModel.findById(id)
-      .populate('group_id')
-      .populate('user_id', '-password')
-      .populate('pay_to.user_id', '-password')
-      .populate('get_pay_by.user_id', '-password')
+      .populate('group_id', 'name description')
+      .populate('user_id', 'name email')
+      .populate('pay_to.user_id', 'name email')
+      .populate('get_pay_by.user_id', 'name email')
     if (!split) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Split not found')
     }
@@ -31,10 +56,10 @@ export const splitService = {
 
   async updateSplit(id, updateData) {
     const updated = await SplitModel.findByIdAndUpdate(id, updateData, { new: true })
-      .populate('group_id')
-      .populate('user_id', '-password')
-      .populate('pay_to.user_id', '-password')
-      .populate('get_pay_by.user_id', '-password')
+      .populate('group_id', 'name description')
+      .populate('user_id', 'name email')
+      .populate('pay_to.user_id', 'name email')
+      .populate('get_pay_by.user_id', 'name email')
     if (!updated) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Split not found')
     }

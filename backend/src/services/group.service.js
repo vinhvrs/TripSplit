@@ -18,15 +18,20 @@ export const groupService = {
   },
 
   async getGroupById(groupId) {
-    const group = await GroupModel.findById(groupId).populate('user_ids', '-password')
+    const group = await GroupModel.findById(groupId).populate('expenses_ids').populate('user_ids', '-password')
     if (!group) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
     }
     return group
   },
 
-  async getAllGroups() {
-    return await GroupModel.find().populate('user_ids', '-password')
+  async getAllGroups(limit = 10, page = 1) {
+    const groups = await GroupModel.find()
+      .sort({ createdAt: -1 })
+      .limit(limit ? parseInt(limit) : 0)
+      .skip(page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0)
+      .populate('user_ids', '-password')
+    return groups
   },
 
   async updateGroup(groupId, updateData) {
