@@ -18,6 +18,6 @@ Router.use('/expenses', expenseRouter)
 Router.use('/groups', groupRouter)
 Router.use('/splits', splitRouter)
 Router.use('/auth', authRouter)
-Router.use('/calculations', calculationRouter)
+Router.use('/settlements', calculationRouter)
 
 export const APIs = Router
