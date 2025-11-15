@@ -23,7 +23,8 @@ export const groupController = {
 
   async getAllGroups(req, res, next) {
     try {
-      const groups = await groupService.getAllGroups()
+      const { limit, page } = req.query;
+      const groups = await groupService.getAllGroups(limit, page)
       res.status(StatusCodes.OK).json(groups)
     } catch (error) {
       next(error)
@@ -88,7 +89,6 @@ export const groupController = {
     try {
       const groupId = req.params.id
       const expenseIds = req.body.expense_ids
-      console.log('Expense IDs to add:', expenseIds)
       const updatedGroup = await groupService.addExpenseToGroup(groupId, expenseIds)
       res.status(StatusCodes.OK).json(updatedGroup)
     } catch (error) {

@@ -23,7 +23,8 @@ export const expenseController = {
 
   async getAllExpenses(req, res, next) {
     try {
-      const expenses = await expenseService.getAllExpenses()
+      const { limit, page } = req.query;
+      const expenses = await expenseService.getAllExpenses(limit, page)
       res.status(StatusCodes.OK).json(expenses)
     } catch (error) {
       next(error)

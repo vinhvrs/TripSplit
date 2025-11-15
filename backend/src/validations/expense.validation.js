@@ -37,6 +37,8 @@ const createExpense = async (req, res, next) => {
 
 const updateExpense = async (req, res, next) => {
   try {
+    const { id } = req.params
+    req.body.id = id
     await UPDATE_EXPENSE_VALIDATION.validateAsync(req.body)
     next()
   } catch (error) {
@@ -46,7 +48,8 @@ const updateExpense = async (req, res, next) => {
 
 const getExpenseById = async (req, res, next) => {
   try {
-    await GET_EXPENSE_BY_ID_VALIDATION.validateAsync(req.params)
+    const { id } = req.params
+    await GET_EXPENSE_BY_ID_VALIDATION.validateAsync({ id })
     next()
   } catch (error) {
     next(error)
@@ -55,7 +58,9 @@ const getExpenseById = async (req, res, next) => {
 
 const deleteExpense = async (req, res, next) => {
   try {
-    await DELETE_EXPENSE_VALIDATION.validateAsync(req.params)
+    const { id } = req.params
+    req.body.id = id
+    await DELETE_EXPENSE_VALIDATION.validateAsync(req.body)
     next()
   } catch (error) {
     next(error)

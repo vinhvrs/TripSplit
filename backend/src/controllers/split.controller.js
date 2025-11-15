@@ -13,7 +13,8 @@ export const splitController = {
 
   async getAllSplits(req, res, next) {
     try {
-      const splits = await splitService.getAllSplits()
+      const { limit, page } = req.query;
+      const splits = await splitService.getAllSplits({ limit, page })
       res.status(StatusCodes.OK).json(splits)
     } catch (error) {
       next(error)
@@ -24,6 +25,28 @@ export const splitController = {
     try {
       const split = await splitService.getSplitById(req.params.id)
       res.status(StatusCodes.OK).json(split)
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  async getSplitsByGroupId(req, res, next) {
+    try {
+      const { limit, page } = req.query;
+      const groupId = req.params.id
+      const splits = await splitService.getSplitsByGroupId(groupId, limit, page)
+      res.status(StatusCodes.OK).json(splits)
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  async getSplitsByUserId(req, res, next) {
+    try {
+      const { limit, page } = req.query;
+      const userId = req.params.id
+      const splits = await splitService.getSplitsByUserId(userId, limit, page)
+      res.status(StatusCodes.OK).json(splits)
     } catch (error) {
       next(error)
     }

@@ -51,9 +51,20 @@ const getSplit = async (req, res, next) => {
   }
 }
 
+const getSplitById = async (req, res, next) => {
+  try {
+    const id = req.params.id
+    await GET_SPLIT_VALIDATION.validateAsync({ id })
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
 const getSplitsByGroupId = async (req, res, next) => {
   try {
-    await GET_SPLITS_BY_GROUP_ID_VALIDATION.validateAsync(req.params)
+    const groupId = req.params.id
+    await GET_SPLITS_BY_GROUP_ID_VALIDATION.validateAsync({ group_id: groupId })
     next()
   } catch (error) {
     next(error)
@@ -62,7 +73,8 @@ const getSplitsByGroupId = async (req, res, next) => {
 
 const getSplitsByUserId = async (req, res, next) => {
   try {
-    await GET_SPLITS_BY_USER_ID_VALIDATION.validateAsync(req.params)
+    const userId = req.params.id
+    await GET_SPLITS_BY_USER_ID_VALIDATION.validateAsync({ user_id: userId })
     next()
   } catch (error) {
     next(error)
@@ -80,7 +92,8 @@ const createSplit = async (req, res, next) => {
 
 const updateSplit = async (req, res, next) => {
   try {
-    await UPDATE_SPLIT_VALIDATION.validateAsync(req.body)
+    const id = req.params.id
+    await UPDATE_SPLIT_VALIDATION.validateAsync({ id, ...req.body })
     next()
   } catch (error) {
     next(error)
@@ -89,7 +102,8 @@ const updateSplit = async (req, res, next) => {
 
 const deleteSplit = async (req, res, next) => {
   try {
-    await DELETE_SPLIT_VALIDATION.validateAsync(req.params)
+    const id = req.params.id
+    await DELETE_SPLIT_VALIDATION.validateAsync({ id })
     next()
   } catch (error) {
     next(error)
@@ -100,6 +114,7 @@ export const splitValidations = {
   createSplit,
   updateSplit,
   getSplit,
+  getSplitById,
   deleteSplit,
   getSplitsByGroupId,
   getSplitsByUserId

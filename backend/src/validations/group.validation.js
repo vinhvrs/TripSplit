@@ -15,8 +15,7 @@ const UPDATE_GROUP_VALIDATION = Joi.object({
   description: Joi.string().max(255).optional(),
   admin_id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).optional(),
   user_ids: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).optional(),
-  expenses_ids: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).optional(),
-  url_invite: Joi.string().optional()
+  expenses_ids: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).optional()
 })
 
 const ADD_USER_TO_GROUP_VALIDATION = Joi.object({
@@ -67,7 +66,8 @@ const createGroup = async (req, res, next) => {
 
 const updateGroup = async (req, res, next) => {
   try {
-    await UPDATE_GROUP_VALIDATION.validateAsync(req.body)
+    const id = req.params.id
+    await UPDATE_GROUP_VALIDATION.validateAsync({ id, ...req.body })
     next()
   } catch (error) {
     next(error)
@@ -76,7 +76,8 @@ const updateGroup = async (req, res, next) => {
 
 const addUserToGroup = async (req, res, next) => {
   try {
-    await ADD_USER_TO_GROUP_VALIDATION.validateAsync(req.body)
+    const id = req.params.id
+    await ADD_USER_TO_GROUP_VALIDATION.validateAsync({ id, ...req.body })
     next()
   } catch (error) {
     next(error)
@@ -85,7 +86,8 @@ const addUserToGroup = async (req, res, next) => {
 
 const removeUserFromGroup = async (req, res, next) => {
   try {
-    await REMOVE_USER_FROM_GROUP_VALIDATION.validateAsync(req.body)
+    const id = req.params.id
+    await REMOVE_USER_FROM_GROUP_VALIDATION.validateAsync({ id, ...req.body })
     next()
   } catch (error) {
     next(error)
@@ -94,7 +96,8 @@ const removeUserFromGroup = async (req, res, next) => {
 
 const addExpenseToGroup = async (req, res, next) => {
   try {
-    await ADD_EXPENSE_TO_GROUP_VALIDATION.validateAsync(req.body)
+    const id = req.params.id
+    await ADD_EXPENSE_TO_GROUP_VALIDATION.validateAsync({ id, ...req.body })
     next()
   } catch (error) {
     next(error)
@@ -103,7 +106,8 @@ const addExpenseToGroup = async (req, res, next) => {
 
 const removeExpenseFromGroup = async (req, res, next) => {
   try {
-    await REMOVE_EXPENSE_FROM_GROUP_VALIDATION.validateAsync(req.body)
+    const id = req.params.id
+    await REMOVE_EXPENSE_FROM_GROUP_VALIDATION.validateAsync({ id, ...req.body })
     next()
   } catch (error) {
     next(error)
@@ -121,7 +125,8 @@ const joinByInviteUrl = async (req, res, next) => {
 
 const getGroupById = async (req, res, next) => {
   try {
-    await GET_GROUP_BY_ID_VALIDATION.validateAsync(req.params)
+    const id = req.params.id
+    await GET_GROUP_BY_ID_VALIDATION.validateAsync({ id })
     next()
   } catch (error) {
     next(error)
