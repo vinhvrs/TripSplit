@@ -48,5 +48,9 @@ Router.delete('/:id/expenses',
   verifyToken,
   groupValidations.removeExpenseFromGroup,
   groupController.removeExpenseFromGroup)
+Router.delete('/:id',
+  verifyToken,
+  groupValidations.deleteGroup,
+  groupController.deleteGroup)
 
 export const groupRouter = Router
