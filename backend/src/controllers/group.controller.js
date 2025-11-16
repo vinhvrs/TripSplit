@@ -120,5 +120,15 @@ export const groupController = {
     catch (error) {
       next(error)
     }
+  },
+
+  async deleteGroup(req, res, next) {
+    try {
+      const groupId = req.params.id
+      const deletedGroup = await groupService.deleteGroup(groupId)
+      res.status(StatusCodes.OK).json(deletedGroup)
+    } catch (error) {
+      next(error)
+    }
   }
 }

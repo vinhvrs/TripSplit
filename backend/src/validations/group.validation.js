@@ -20,7 +20,7 @@ const UPDATE_GROUP_VALIDATION = Joi.object({
 
 const ADD_USER_TO_GROUP_VALIDATION = Joi.object({
   id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).required(),
-  user_id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).required()
+  user_ids: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).required()
 })
 
 const REMOVE_USER_FROM_GROUP_VALIDATION = Joi.object({
