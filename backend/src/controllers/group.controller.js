@@ -4,7 +4,10 @@ import { groupService } from '../services/group.service'
 export const groupController = {
   async createGroup(req, res, next) {
     try {
-      const newGroup = await groupService.createGroup(req.body)
+      const newGroup = await groupService.createGroup({
+        ...req.body,
+        admin_id: req.user.id
+      })
       res.status(StatusCodes.CREATED).json(newGroup)
     } catch (error) {
       next(error)
@@ -24,7 +27,8 @@ export const groupController = {
   async getAllGroups(req, res, next) {
     try {
       const { limit, page } = req.query;
-      const groups = await groupService.getAllGroups(limit, page)
+      const userId = req.user.id;
+      const groups = await groupService.getAllGroups(limit, page, userId)
       res.status(StatusCodes.OK).json(groups)
     } catch (error) {
       next(error)

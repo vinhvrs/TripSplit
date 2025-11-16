@@ -31,11 +31,11 @@ export const authController = {
         const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
           expiresIn: '1d'
         })
-        return res.redirect('/profile?token=' + token)
+        return res.redirect(`${process.env.FRONTEND_URL}/profile?token=${token}`)
       })
       .catch(err => {
         console.error('Error creating/updating user:', err)
-        res.redirect('/login')
+        res.redirect(`${process.env.FRONTEND_URL}/login`)
       })
   },
 
@@ -46,11 +46,11 @@ export const authController = {
         const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
           expiresIn: '1d'
         })
-        return res.redirect('/profile?token=' + token)
+        return res.redirect(`${process.env.FRONTEND_URL}/profile?token=${token}`)
       })
       .catch(err => {
         console.error('Error creating/updating user:', err)
-        res.redirect('/login')
+        res.redirect(`${process.env.FRONTEND_URL}/login`)
       })
   },
 
