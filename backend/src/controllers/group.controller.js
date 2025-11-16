@@ -27,8 +27,18 @@ export const groupController = {
   async getAllGroups(req, res, next) {
     try {
       const { limit, page } = req.query;
+      const groups = await groupService.getAllGroups(limit, page)
+      res.status(StatusCodes.OK).json(groups)
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  async getGroupsByAdminId(req, res, next) {
+    try {
+      const { limit, page } = req.query;
       const userId = req.user.id;
-      const groups = await groupService.getAllGroups(limit, page, userId)
+      const groups = await groupService.getGroupsByUserId(userId, limit, page)
       res.status(StatusCodes.OK).json(groups)
     } catch (error) {
       next(error)

@@ -8,6 +8,9 @@ const Router = express.Router()
 Router.get('/invite/:url',
   groupValidations.getGroupByInviteUrl,
   groupController.getGroupByInviteUrl)
+Router.get('/admin/me',
+  verifyToken,
+  groupController.getGroupsByAdminId)
 Router.get('/:id',
   verifyToken,
   groupValidations.getGroupById,

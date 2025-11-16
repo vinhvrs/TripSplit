@@ -34,6 +34,18 @@ export const groupService = {
     return groups
   },
 
+  async getGroupsByUserId(userId, limit = 10, page = 1) {
+    const groups = await GroupModel.find({
+      $or: [{ admin_id: userId }, { user_ids: userId }]
+    })
+      .sort({ createdAt: -1 })
+      .limit(limit ? parseInt(limit) : 0)
+      .skip(page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0)
+      .populate('user_ids', '-password')
+      .populate('admin_id', '-password')
+    return groups
+  },
+
   async updateGroup(groupId, updateData) {
     const group = await GroupModel.findOne({
       _id: groupId
