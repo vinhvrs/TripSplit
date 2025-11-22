@@ -103,6 +103,9 @@ export const groupController = {
     try {
       const groupId = req.params.id
       const expenseIds = req.body.expense_ids
+      if (!expenseIds || (Array.isArray(expenseIds) && expenseIds.length === 0)) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'expense_ids is required' })
+      }
       const updatedGroup = await groupService.addExpenseToGroup(groupId, expenseIds)
       res.status(StatusCodes.OK).json(updatedGroup)
     } catch (error) {

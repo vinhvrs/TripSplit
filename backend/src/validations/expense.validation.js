@@ -59,8 +59,7 @@ const getExpenseById = async (req, res, next) => {
 const deleteExpense = async (req, res, next) => {
   try {
     const { id } = req.params
-    req.body.id = id
-    await DELETE_EXPENSE_VALIDATION.validateAsync(req.body)
+    await DELETE_EXPENSE_VALIDATION.validateAsync({ id })
     next()
   } catch (error) {
     next(error)

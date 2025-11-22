@@ -9,6 +9,15 @@ export const groupService = {
     groupData.admin_id = admin_id
     const url = crypto.randomUUID()
     groupData.url_invite = url
+
+    // Ensure creator is always added to user_ids
+    if (!groupData.user_ids) {
+      groupData.user_ids = []
+    }
+    if (!groupData.user_ids.includes(admin_id)) {
+      groupData.user_ids.push(admin_id)
+    }
+
     const newGroup = new GroupModel(groupData)
     if (groupData.expenses_ids === undefined) {
       newGroup.expenses_ids = []
@@ -18,7 +27,16 @@ export const groupService = {
   },
 
   async getGroupById(groupId) {
-    const group = await GroupModel.findById(groupId).populate('expenses_ids').populate('user_ids', '-password')
+    const group = await GroupModel.findById(groupId)
+      .populate({
+        path: 'expenses_ids',
+        populate: [
+          { path: 'paid_by', select: '-password' },
+          { path: 'paid_for', select: '-password' }
+        ]
+      })
+      .populate('user_ids', '-password')
+      .populate('admin_id', '-password')
     if (!group) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
     }
@@ -41,6 +59,13 @@ export const groupService = {
       .sort({ createdAt: -1 })
       .limit(limit ? parseInt(limit) : 0)
       .skip(page && limit ? (parseInt(page) - 1) * parseInt(limit) : 0)
+      .populate({
+        path: 'expenses_ids',
+        populate: [
+          { path: 'paid_by', select: '-password' },
+          { path: 'paid_for', select: '-password' }
+        ]
+      })
       .populate('user_ids', '-password')
       .populate('admin_id', '-password')
     return groups
@@ -119,9 +144,11 @@ export const groupService = {
     if (!group) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Group not found')
     }
+    if (!expenseId) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Expense ID is required')
+    }
     if (!group.expenses_ids) {
       group.expenses_ids = []
-      return group
     }
     if (Array.isArray(expenseId)) {
       const idsToAdd = expenseId.filter(id =>

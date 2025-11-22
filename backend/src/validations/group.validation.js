@@ -30,7 +30,7 @@ const REMOVE_USER_FROM_GROUP_VALIDATION = Joi.object({
 
 const ADD_EXPENSE_TO_GROUP_VALIDATION = Joi.object({
   id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).required(),
-  expense_id: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).required()
+  expense_ids: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).min(1).required()
 })
 
 const REMOVE_EXPENSE_FROM_GROUP_VALIDATION = Joi.object({
